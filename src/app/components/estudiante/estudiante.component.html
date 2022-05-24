@@ -1,0 +1,120 @@
+<mat-form-field appearance="standard">
+  <mat-label>Filtro</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Escribe lo que quieras buscar :D" #input>
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+    <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="apellido">
+    <th mat-header-cell *matHeaderCellDef> Apellido </th>
+    <td mat-cell *matCellDef="let element"> {{element.apellido}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="correo">
+    <th mat-header-cell *matHeaderCellDef> Correo </th>
+    <td mat-cell *matCellDef="let element"> {{element.correo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="identificacion">
+    <th mat-header-cell *matHeaderCellDef> Identificacion </th>
+    <td mat-cell *matCellDef="let element"> {{element.identificacion}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="programa">
+    <th mat-header-cell *matHeaderCellDef> Programa </th>
+    <td mat-cell *matCellDef="let element"> {{element.programa}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef> acciones </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button color="primary" (click)="open(content,'Editar',element)">
+        <mat-icon>edit</mat-icon>Editar
+      </button>
+      <button mat-button color="warn" (click)="eliminar(element)">
+        <mat-icon>delete</mat-icon>Borrar
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="10" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+
+
+<button mat-raised-button color="primary" (click)="goHome()">
+  <mat-icon>arrow_back</mat-icon>Volver
+</button>
+<button mat-raised-button color="primary" (click)="open(content,'Nuevo')">
+  <mat-icon>add</mat-icon>Agregar
+</button>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">{{accion}} Empleado</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="card mt-3" [formGroup]="form">
+
+      <div class="card-header d-flex align-items-center justify-content-between flex-wrap" style="gap: 1rem;">
+        <div class="m-1 d-flex align-items-center flex-column flex-sm-row">
+          <small class="title-description">
+            Campos con * Obligatorios
+          </small>
+        </div>
+      </div>
+
+      <div class="card-body row">
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Nombre </mat-label>
+          <input matInput formControlName="nombre" (input)="form.get('nombre')?.setValue(form.get('nombre')?.value)"
+            type="text" [maxlength]="50">
+        </mat-form-field>
+
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Apellido </mat-label>
+          <input matInput formControlName="apellido"
+            (input)="form.get('apellido')?.setValue(form.get('apellido')?.value)" type="text" [maxlength]="50">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Correo Electrónico </mat-label>
+          <input matInput formControlName="correo" (input)="form.get('correo')?.setValue(form.get('correo')?.value)"
+            type="text" [maxlength]="50">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Número de Identificación </mat-label>
+          <input matInput formControlName="identificacion"
+            (input)="form.get('identificacion')?.setValue(form.get('identificacion')?.value)" type="text"
+            [maxlength]="20">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Programa </mat-label>
+          <input matInput formControlName="programa"
+            (input)="form.get('programa')?.setValue(form.get('programa')?.value)" type="text" [maxlength]="50">
+        </mat-form-field>
+      </div>
+
+      <div class="card-footer d-flex align-items-center justify-content-end gap-2">
+        <button *ngIf="accion==='Nuevo'" mat-button color="primary" (click)="crear()">Crear</button>
+        <button *ngIf="accion!='Nuevo'" mat-button color="primary" (click)="modificar()">Modificar</button>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>

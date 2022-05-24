@@ -1,0 +1,88 @@
+<mat-form-field appearance="standard">
+  <mat-label>Filtro</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Escribe lo que quieras buscar :D" #input>
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="estudiante">
+    <th mat-header-cell *matHeaderCellDef> Estudiante </th>
+    <td mat-cell *matCellDef="let element"> {{element.estudiante}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="asignatura">
+    <th mat-header-cell *matHeaderCellDef> Asignatura </th>
+    <td mat-cell *matCellDef="let element"> {{element.asignatura}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef> acciones </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button color="primary" (click)="open(content,'Editar',element)">
+        <mat-icon>edit</mat-icon>Editar
+      </button>
+      <button mat-button color="warn" (click)="eliminar(element)">
+        <mat-icon>delete</mat-icon>Borrar
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSize]="10" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+
+
+<button mat-raised-button color="primary" (click)="goHome()">
+  <mat-icon>arrow_back</mat-icon>Volver
+</button>
+<button mat-raised-button color="primary" (click)="open(content,'Nuevo')">
+  <mat-icon>add</mat-icon>Agregar
+</button>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title" id="modal-basic-title">{{accion}} Empleado</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="card mt-3" [formGroup]="form">
+
+      <div class="card-header d-flex align-items-center justify-content-between flex-wrap" style="gap: 1rem;">
+        <div class="m-1 d-flex align-items-center flex-column flex-sm-row">
+          <small class="title-description">
+            Campos con * Obligatorios
+          </small>
+        </div>
+      </div>
+
+      <div class="card-body row">
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Estudiante</mat-label>
+          <mat-select formControlName="id_estudiante">
+            <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">{{estudiante.id}} - {{estudiante.nombre}} {{estudiante.apellido}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-12 col-md-6">
+          <mat-label>Asignatura</mat-label>
+          <mat-select formControlName="id_asignatura">
+            <mat-option *ngFor="let asignatura of asignaturas" [value]="asignatura.id">{{asignatura.id}} - {{asignatura.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+      <div class="card-footer d-flex align-items-center justify-content-end gap-2">
+        <button *ngIf="accion==='Nuevo'" mat-button color="primary" (click)="crear()">Crear</button>
+        <button *ngIf="accion!='Nuevo'" mat-button color="primary" (click)="modificar()">Modificar</button>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Cerrar</button>
+  </div>
+</ng-template>
